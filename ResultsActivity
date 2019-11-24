@@ -1,0 +1,222 @@
+public class Results extends AppCompatActivity {
+    TextView G1;
+    TextView P1;
+    TextView G2;
+    TextView P2;
+    TextView G3;
+    TextView P3;
+    TextView G4;
+    TextView P4;
+    TextView G5;
+    TextView P5;
+    ArrayList<Double> p1 = new ArrayList<>();
+    ArrayList<Double> p2 = new ArrayList<>();
+    ArrayList<Double> p3 = new ArrayList<>();
+    ArrayList<Double> p4 = new ArrayList<>();
+    ArrayList<Double> p5 = new ArrayList<>();
+    ArrayList<Double> p6 = new ArrayList<>();
+    ArrayList<String> g1 = new ArrayList<>();
+    ArrayList<String> g2 = new ArrayList<>();
+    ArrayList<String> g3 = new ArrayList<>();
+    ArrayList<String> g4 = new ArrayList<>();
+    ArrayList<String> g5 = new ArrayList<>();
+    ArrayList<String> g6 = new ArrayList<>();
+    DatabaseReference currentRef;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_results);
+        Bundle bundle = this.getIntent().getExtras();
+        String[] itemArray = new String[100];
+        itemArray[0] = new String();
+        if(bundle != null){
+            itemArray = bundle.getStringArray("KEY");
+        }
+;
+while(itemArray != null){
+        for(int j = 0; j < itemArray.length; j++) {
+            currentRef = FirebaseDatabase.getInstance().getReference();
+            currentRef.child("Central").child(itemArray[j]).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    String grocery1 = (String)dataSnapshot.child("Grocery_1").child("Grocery_Name").getValue();
+                    Double price1 = (Double) dataSnapshot.child("Grocery_1").child("Price").getValue();
+                    String grocery2 =(String) dataSnapshot.child("Grocery_2").child("Grocery_Name").getValue();
+                    Double price2 = (Double) dataSnapshot.child("Grocery_2").child("Price").getValue();
+                    String grocery3 =(String) dataSnapshot.child("Grocery_3").child("Grocery_Name").getValue();
+                    Double price3 = (Double) dataSnapshot.child("Grocery_3").child("Price").getValue();
+                    String grocery4 =(String) dataSnapshot.child("Grocery_4").child("Grocery_Name").getValue();
+                    Double price4 = (Double) dataSnapshot.child("Grocery_4").child("Price").getValue();
+                    String grocery5 =(String) dataSnapshot.child("Grocery_5").child("Grocery_Name").getValue();
+                    Double price5 = (Double) dataSnapshot.child("Grocery_5").child("Price").getValue();
+                    String grocery6 =(String) dataSnapshot.child("Grocery_6").child("Grocery_Name").getValue();
+                    Double price6 = (Double) dataSnapshot.child("Grocery_6").child("Price").getValue();
+                    p1.add(price1);
+                    p2.add(price2);
+                    p3.add(price3);
+                    p4.add(price4);
+                    p5.add(price5);
+                    p6.add(price6);
+                    g1.add(grocery1);
+                    g2.add(grocery2);
+                    g3.add(grocery3);
+                    g4.add(grocery4);
+                    g5.add(grocery5);
+                    g6.add(grocery6);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+
+
+            });
+            G1 = findViewById(R.id.BestGrocery_tv);
+            P1 = findViewById(R.id.BestPrice_tv);
+            G2 = findViewById(R.id.G2);
+            P2 = findViewById(R.id.P2);
+            G3 = findViewById(R.id.G3);
+            P3 = findViewById(R.id.P3);
+            G4 = findViewById(R.id.G4);
+            P4 = findViewById(R.id.P4);
+            G5 = findViewById(R.id.G5);
+            P5 = findViewById(R.id.P5);
+
+            int sum1 = 0;
+            for(int a = 0; a< p1.size();a++){
+                sum1 += p1.get(a);
+            }
+            int sum2 = 0;
+            for(int b = 0; b < p2.size(); b++){
+                sum2 += p2.get(b);
+            }
+            int sum3= 0;
+            for(int c = 0; c < p3.size(); c++){
+                sum3 += p3.get(c);
+            }
+            int sum4 = 0;
+            for(int d = 0; d < p4.size(); d++){
+                sum4 += p4.get(d);
+            }
+            int sum5 = 0;
+            for(int e = 0; e < p5.size(); e++){
+                sum5 += p5.get(e);
+            }
+            int sum6 = 0;
+            for(int f = 0; f < p6.size(); f++){
+                sum6 += p6.get(f);
+            }
+            double sums[] = {sum1, sum2,sum3, sum4,sum5,sum6};
+            double  temp;
+            for(int i = 0; i < sums.length; i++){
+                for(int g = i+1;g < sums.length; g++){
+                    if(sums[i] > sums[j]){
+                        temp = sums[j];
+                        sums[i] = sums[j];
+                        sums[j] = temp;
+
+                    }
+                }
+            }
+
+            P1.setText(""+sums[0]);
+            if (sums[0] == sum1){
+                G1.setText(g1.get(0));
+            }
+            else if(sums[0] == sum2){
+                G1.setText(g2.get(0));
+            }
+            else if(sums[0] == sum3){
+                G1.setText(g3.get(0));
+            }
+            else if(sums[0] == sum4){
+                G1.setText(g4.get(0));
+            }
+            else if(sums[0] == sum5){
+                G1.setText(g5.get(0));
+            }
+            else if (sums[0] == sum6){
+                G1.setText(g6.get(0));
+            }
+            P2.setText(""+sums[1]);
+            if(sums[1]==sum1){
+                G2.setText(g1.get(0));
+            }
+            else if(sums[1] == sum2){
+                G2.setText(g2.get(0));
+            }
+            else if(sums[1] == sum3){
+                G2.setText(g3.get(0));
+            }
+            else if(sums[1] == sum4){
+                G2.setText(g4.get(0));
+            }
+            else if(sums[1] == sum5){
+                G2.setText(g5.get(0));
+            }
+            else if(sums[1] == sum6){
+                G2.setText(g6.get(0));
+            }
+            P3.setText(""+sums[2]);
+            if(sums[2] == sum1){
+                G3.setText(g1.get(0));
+            }
+            else if(sums[2] == sum2){
+                G3.setText(g2.get(0));
+            }
+            else if(sums[2] == sum3){
+                G3.setText(g3.get(0));
+            }
+            else if(sums[2] == sum4){
+                G3.setText(g4.get(0));
+            }
+            else if(sums[2] == sum5){
+                G3.setText(g5.get(0));
+            }
+            else if(sums[2] == sum6){
+                G3.setText(g6.get(0));
+            }
+            P4.setText(""+sums[3]);
+            if(sums[3] == sum1){
+                G4.setText(g1.get(0));
+            }
+            else if (sums[3] == sum2){
+                G4.setText(g2.get(0));
+            }
+            else if (sums[3] == sum3){
+                G4.setText(g3.get(0));
+            }
+            else if (sums[3] == sum4){
+                G4.setText(g4.get(0));
+            }
+            else if (sums[3] == sum5){
+                G4.setText(g5.get(0));
+            }
+            else if (sums[3] == sum6){
+                G4.setText(g6.get(0));
+            }
+            P5.setText(""+sums[4]);
+            if(sums[4]== sum1){
+                G5.setText(g1.get(0));
+            }
+            else if(sums[4] == sum2){
+                G5.setText(g2.get(0));
+            }
+            else if(sums[4] == sum3){
+                G5.setText(g3.get(0));
+            }
+            else if(sums[4] == sum4){
+                G5.setText(g4.get(0));
+            }
+            else if(sums[4] == sum5){
+                G5.setText(g5.get(0));
+            }
+            else if(sums[4] == sum6){
+                G5.setText(g6.get(0));
+            }
+
+        }
+    }
+} }
