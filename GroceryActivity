@@ -1,0 +1,89 @@
+public class GroceryItems extends AppCompatActivity {
+    Button done;
+    Button enter;
+    ArrayList<String> addArray = new ArrayList<>();
+    EditText Item;
+    ListView Display;
+    ArrayAdapter<String> adapter;
+
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_grocery_items);
+
+        Item = findViewById(R.id.itemInput_et);
+        Display = findViewById(R.id.Items_lv);
+        enter = (Button) findViewById(R.id.enterButton);
+        done = findViewById(R.id.doneButton);
+        done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent next = new Intent(GroceryItems.this,Results.class);
+                startActivity(next);
+
+            }
+        });
+        enter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String getInput = Item.getText().toString();
+                if (addArray.contains(getInput)) {
+                    Toast.makeText(getBaseContext(), "Item Already Entered", Toast.LENGTH_LONG).show();
+                } else if (getInput == null || getInput.trim().equals("")) {
+                    Toast.makeText(getBaseContext(), "No items Entered", Toast.LENGTH_LONG).show();
+                } else {
+                    addArray.add(getInput);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(GroceryItems.this, android.R.layout.simple_list_item_1, addArray);
+                    Display.setAdapter(adapter);
+                    ((EditText) findViewById(R.id.itemInput_et)).setText(" ");
+                }
+                        }
+
+                    });
+        addArray = new ArrayList<>();
+        adapter = new ArrayAdapter<String>(GroceryItems.this, android.R.layout.simple_list_item_1,addArray);
+        View.OnClickListener addlistener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addArray.add(Item.getText().toString());
+                Item.setText(" ");
+                adapter.notifyDataSetChanged();
+            }
+        };
+
+        Display.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                SparseBooleanArray positionchecker = Display.getCheckedItemPositions();
+                int count = Display.getCount();
+                for(int item = count- 1; item >= 0; item--){
+                    if(positionchecker.get(item)){
+                        adapter.remove(addArray.get(item));
+                    }
+                }
+                positionchecker.clear();
+                adapter.notifyDataSetChanged();
+
+
+                return false;
+            }
+        });
+        String items[] = new String[addArray.size()];
+        for(int k = 0; k<addArray.size(); k++){
+            items[k]= new String();
+           items[k] = addArray.get(k);
+        }
+        Display.setAdapter(adapter);
+        Bundle b = new Bundle();
+        b.putStringArray("KEY",items);
+        Intent intent = new Intent(GroceryItems.this,Results.class);
+        intent.putExtras(b);
+        startActivity(intent);
+    }
+
+
+
+            }
